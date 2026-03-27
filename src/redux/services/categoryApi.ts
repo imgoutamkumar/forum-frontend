@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type ApiResponse<T = unknown> = {
   data: T
@@ -11,7 +12,7 @@ export const categoryApi = createApi({
     reducerPath: 'categoryApi',
     tagTypes: ['Category'],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://forum-backend-5pxg.onrender.com/',
+        baseUrl: baseUrl,
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as any).auth.token
 

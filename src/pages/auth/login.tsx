@@ -56,9 +56,9 @@ const Login = () => {
         dispatch(setRole(response?.data?.role?.toLowerCase()));
 
         if (response?.data?.role?.toLowerCase() === "admin") {
-          navigate("/admin/thread/new");
+          navigate("/admin/threads/all");
         } else if (response?.data?.role?.toLowerCase() === "user") {
-          navigate("/shop/threads");
+          navigate("/threads/all");
         } else {
           navigate("/");
         }

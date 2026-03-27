@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { ApiResponse, PostPaginatedResponse, PostWithBlocks } from '../types/thread'
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const postApi = createApi({
     reducerPath: "postApi",
     tagTypes: ["Posts"],
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://forum-backend-5pxg.onrender.com/",
+        baseUrl: baseUrl,
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as { auth?: { token?: string } }).auth?.token
 
