@@ -8,11 +8,7 @@ import AuthLayout from './components/auth/layout'
 import Home from './pages/shop/home'
 import Register from './pages/auth/register'
 import Profile from './pages/auth/profile'
-import Products from './pages/admin/Threads'
 import AdminLayout from './components/admin/AdminLayout'
-import NewProduct from './pages/admin/NewThread'
-import AllProducts from './pages/shop/AllThreads'
-import ProductDetails from './pages/shop/ThreadPage'
 import RoleGuard from './guards/RoleGuard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import Checkout from './pages/shop/Checkout'
@@ -23,6 +19,7 @@ import AllThreads from './pages/shop/AllThreads'
 import CreatePost from './pages/admin/CreatePost'
 import ThreadDetailPage from './pages/admin/ThreadDetailPage'
 import Threads from './pages/admin/Threads'
+import NotFound from './pages/auth/NotFound'
 
 function App() {
 
@@ -64,6 +61,7 @@ function App() {
           {/* <Route path="product/new" element={<NewProduct />} /> */}
         </Route>
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
