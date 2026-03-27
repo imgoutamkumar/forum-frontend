@@ -7,18 +7,10 @@ import { CustomInput } from "@/customComponent/input"
 import { CustomSelect } from "@/customComponent/select"
 import { Button } from "@/components/ui/button"
 import { useCreateThreadMutation } from "@/redux/services/threadApi"
+import { useGetCategoriesQuery } from "@/redux/services/categoryApi"
 
 
-const categoryOptions = [
-    {
-        label: "Science",
-        value: "f56be287-c460-44c0-a242-c0d970d12a27"
-    },
-    {
-        label: "AI",
-        value: "00fd2630-d347-4510-8a7f-0976c977a187"
-    }
-]
+
 const blockSchema = z.object({
     type: z.enum(["TEXT", "IMAGE", "VIDEO"]),
     content: z.string().optional(),
@@ -49,8 +41,13 @@ const threadSchema = z.object({
 })
 
 const CreateThreadForm = () => {
-
+    const {data:categories, isLoading:isCategoryDataLoading} = useGetCategoriesQuery()
     const [createThread, { isLoading }] = useCreateThreadMutation()
+
+const categoryOptions = categories.data.map((category: any) => ({
+  label: category.name,
+  value: category.id
+}));
 
     const form = useForm({
         resolver: zodResolver(threadSchema),

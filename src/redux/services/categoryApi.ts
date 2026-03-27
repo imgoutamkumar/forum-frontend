@@ -26,7 +26,7 @@ export const categoryApi = createApi({
     endpoints: (builder) => ({
         createCategory: builder.mutation<ApiResponse, { name: string}>({
             query: (credentials) => ({
-                url: '/products/categories',
+                url: '/category/create',
                 method: 'POST',
                 body: credentials,
             }),
@@ -34,14 +34,14 @@ export const categoryApi = createApi({
         }),
         getCategories: builder.query<any, void>({
             query: () => ({
-                url: '/products/category/all',
+                url: '/category/all',
                 method: 'GET',
             }),
             providesTags: ['Category'],
         }),
         deleteCategory: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/products/categories/${id}`,
+                url: `/category/categories/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['Category'],
