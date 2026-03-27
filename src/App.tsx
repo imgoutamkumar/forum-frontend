@@ -21,6 +21,8 @@ import NewThread from './pages/admin/NewThread'
 import ThreadPage from './pages/shop/ThreadPage'
 import AllThreads from './pages/shop/AllThreads'
 import CreatePost from './pages/admin/CreatePost'
+import ThreadDetailPage from './pages/admin/ThreadDetailPage'
+import Threads from './pages/admin/Threads'
 
 function App() {
 
@@ -53,9 +55,10 @@ function App() {
         <Route path='/admin' element={<AdminLayout />} >
           <Route path='dashboard' element={<AdminDashboard />} />
           <Route path='profile/:id' element={<Profile />} />
-          <Route path="threads/all" element={<Products />} />
-          <Route path='testall' element={<AllThreads />} />
+          <Route path="threads/all" element={<Threads />} />
+          <Route path='all-threads' element={<AllThreads />} />
           <Route path="thread/new" element={<NewThread />} />
+          <Route path="thread/:threadId" element={<ThreadDetailPage />} />
           <Route path='thread/new-post/:threadId' element={<CreatePost />} />
 
           {/* <Route path="product/new" element={<NewProduct />} /> */}

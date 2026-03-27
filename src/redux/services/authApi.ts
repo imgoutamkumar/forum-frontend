@@ -36,7 +36,7 @@ export const authApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        register: builder.mutation<ApiResponse, { username: string; fullname: string, email: string; password: string }>({
+        register: builder.mutation<ApiResponse, { name: string, email: string; password: string }>({
             query: (credentials) => ({
                 url: '/users/register',
                 method: 'POST',

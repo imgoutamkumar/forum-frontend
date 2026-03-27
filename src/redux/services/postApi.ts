@@ -36,6 +36,22 @@ export const postApi = createApi({
                 method: "GET",
                 params: { page, limit },
             }),
+            providesTags: (result, error, { threadId }) => [
+                { type: "Posts", id: `THREAD_${threadId}` },
+            ],
+        }),
+
+        updatePost: builder.mutation<ApiResponse, { threadId: string; formData: FormData }>({
+            query: ({ threadId, formData }) => {
+                return {
+                    url: `/posts/update/${threadId}`,
+                    method: "PUT",
+                    body: formData,
+                }
+            },
+            invalidatesTags: (result, error, { threadId }) => [
+                { type: "Posts", id: `THREAD_${threadId}` },
+            ],
         }),
 
         reorderPostBlockImages: builder.mutation({
@@ -52,5 +68,6 @@ export const postApi = createApi({
 export const {
     useCreatePostMutation,
     useGetThreadPostsQuery,
+    useUpdatePostMutation,
     useReorderPostBlockImagesMutation
 } = postApi

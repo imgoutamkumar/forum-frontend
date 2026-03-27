@@ -10,7 +10,20 @@ const CreateNewPostForm = ({ threadId }: { threadId: string }) => {
     const blockSchema = z.object({
         type: z.enum(["TEXT", "IMAGE", "VIDEO"]),
         content: z.string().optional(),
-        media: z.array(z.instanceof(File)).optional()
+        media: z.object({
+            existing: z
+                .array(
+                    z.object({
+                        url: z.string(),
+                        publicId: z.string().optional(), // optional but useful for deletion
+                    })
+                )
+                .optional(),
+
+            new: z
+                .array(z.instanceof(File))
+                .optional(),
+        }).optional(),
     })
 
     const postSchema = z.object({
@@ -28,7 +41,11 @@ const CreateNewPostForm = ({ threadId }: { threadId: string }) => {
                 blocks: [
                     {
                         type: "TEXT",
-                        content: ""
+                        content: "",
+                        media: {
+                            existing: [], // already uploaded (URLs)
+                            new: []       // new File[]
+                        }
                     }
                 ]
             }
@@ -55,9 +72,9 @@ const CreateNewPostForm = ({ threadId }: { threadId: string }) => {
 
             // Append files separately
             data.post.blocks.forEach((block: any, index: number) => {
-                if (block.media?.length) { // check array exists
-                    block.media.forEach((file: File) => {
-                        formData.append(`block_${index}`, file) // append each file individually
+                if (block.media?.new?.length) { // check array exists
+                    block.media.new.forEach((file: File) => {
+                        formData.append(`block_${index}`, file)
                     })
                 }
             })

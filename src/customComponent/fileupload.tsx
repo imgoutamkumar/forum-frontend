@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { Divide, FileText, Upload, X } from "lucide-react"
-import { useState } from "react"
+import { FileText, Upload, X } from "lucide-react"
 
 
 export type FileUploadProps = {
-  inputId : string
+  inputId: string
   multiple?: boolean
   accept?: string
   maxSizeMB?: number
@@ -17,11 +15,11 @@ export type FileUploadProps = {
 
 export const FileUpload = ({
   inputId,
-   multiple = true,
+  multiple = true,
   accept = "image/*,application/pdf",
   maxSizeMB = 5,
   onChange,
-selectedFiles }: FileUploadProps) => {
+  selectedFiles }: FileUploadProps) => {
 
   // const [files, setFiles] = useState<File[]>([])
 
@@ -50,13 +48,13 @@ selectedFiles }: FileUploadProps) => {
   return (
     <div className="flex flex-col w-full">
       {/* <Label htmlFor="file-upload" className="mb-2">Product Images</Label> */}
-      <Card className="mx-auto rounded-2xl shadow-md w-full">
-        <CardContent className="p-6 space-y-4">
+      <Card className="mx-auto rounded-2xl shadow-md w-full p-2">
+        <CardContent className="p-4 space-y-4">
           <label
             htmlFor={inputId}
             className={cn(
               "flex flex-col items-center justify-center gap-3",
-              "border-2 border-dashed rounded-2xl p-6",
+              "border-2 border-dashed rounded-2xl p-4",
               "cursor-pointer transition",
               "hover:border-primary hover:bg-muted"
             )}
@@ -66,7 +64,7 @@ selectedFiles }: FileUploadProps) => {
               Click to upload or drag & drop
             </p>
             <p className="text-xs text-muted-foreground">
-              Images or PDF · Max {maxSizeMB}MB each
+              Images or Video · Max {maxSizeMB}MB each
             </p>
             <input
               id={inputId}
@@ -79,7 +77,7 @@ selectedFiles }: FileUploadProps) => {
           </label>
 
           {selectedFiles?.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:grid-cols-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 lg:grid-cols-3">
               {selectedFiles?.map((file, index) => {
                 const isImage = file.type.startsWith("image/")
                 const preview = isImage ? URL.createObjectURL(file) : null
@@ -87,21 +85,21 @@ selectedFiles }: FileUploadProps) => {
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between rounded-xl border p-3"
+                    className="flex items-center justify-between rounded-xl border p-2"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
                       {isImage ? (
                         <img
                           src={preview!}
                           alt={file?.name}
-                          className="h-12 w-12 rounded-lg object-cover"
+                          className="h-12 w-12 rounded-lg object-cover flex-shrink-0"
                         />
                       ) : (
-                        <FileText className="h-6 w-6 text-primary" />
+                        <FileText className="h-6 w-6 text-primary flex-shrink-0" />
                       )}
 
-                      <div className="text-sm">
-                        <p className="font-medium truncate max-w-[200px]">
+                      <div className="text-sm truncate min-w-0">
+                        <p className="font-medium truncate max-w-[180px]">
                           {file?.name}
                         </p>
                         <p className="text-xs text-muted-foreground">

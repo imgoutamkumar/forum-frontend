@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button"
 import FileUpload from "@/customComponent/fileupload"
 import { CustomSelect } from "@/customComponent/select"
 import { CustomTextarea } from "@/customComponent/textarea"
-import { Trash2 } from "lucide-react"
+import { Trash2, X } from "lucide-react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const blockTypeOptions = [
@@ -31,8 +32,21 @@ const PostBlockForm = ({ index, remove }) => {
   const medias = useWatch({
     control,
     name: `post.blocks.${index}.media`,
-    defaultValue: []
+    defaultValue: {
+      existing: [],
+      new: []
+    }
   })
+
+  useEffect(() => {
+    console.log("medias", medias)
+    if (type === "TEXT") {
+      setValue(`post.blocks.${index}.media`, {
+        existing: [],
+        new: []
+      })
+    }
+  }, [type, index, setValue])
 
   return (
     <div className="relative rounded-2xl border border-gray-300 p-4 mb-2">
@@ -66,23 +80,61 @@ const PostBlockForm = ({ index, remove }) => {
         //         console.log(e.target.files)
         //     }}
         // />
-        <FileUpload inputId={`post.blocks.${index}`} selectedFiles={medias}
+        <FileUpload inputId={`post.blocks.${index}`} selectedFiles={medias?.new || []}
           onChange={(files) => {
-            setValue(`post.blocks.${index}.media`, files, { shouldDirty: true })
+            setValue(`post.blocks.${index}.media.new`, files, { shouldDirty: true })
             console.log("files", files)
           }}
         />
       )}
       {/* VIDEO */}
       {(type === "VIDEO") && (
-        <FileUpload inputId={`post.blocks.${index}`} selectedFiles={medias}
-          accept="video/*,application/pdf"
+        <FileUpload inputId={`post.blocks.${index}`} selectedFiles={medias?.new || []}
+          accept="video/*"
           maxSizeMB={10}
           onChange={(files) => {
-            setValue(`post.blocks.${index}.media`, files, { shouldDirty: true })
+            setValue(`post.blocks.${index}.media.new`, files, { shouldDirty: true })
             console.log("files", files)
           }}
         />
+      )}
+
+      {/* show existing media while updating */}
+      {medias?.existing?.length > 0 && (
+        <div className="flex flex-wrap gap-2 m-2">
+          {medias?.existing?.map((item: any, i: number) => (
+            <div key={i} className="relative flex flex-wrap">
+              {type === "VIDEO" ? (
+                <video
+                  src={item?.url}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full max-w-32 h-22 object-cover rounded hover:opacity-45"
+                />
+              ) : (
+                <img
+                  src={item?.url}
+                  className="w-full max-w-32 h-22 object-cover rounded hover:opacity-45"
+                />
+              )}
+
+              <button
+                type="button"
+                className="absolute top-[0.1rem] right-[0.1rem] cursor-pointer bg-black/60 hover:bg-black text-white rounded-full size-4 text-xs flex justify-center items-center"
+                onClick={() => {
+                  const updated = medias?.existing?.filter((_: any, idx: number) => idx !== i)
+                  setValue(`post.blocks.${index}.media.existing`, updated, {
+                    shouldDirty: true,
+                  })
+                }}
+              >
+                <X />
+              </button>
+            </div>
+          ))}
+        </div>
       )}
 
       <Button

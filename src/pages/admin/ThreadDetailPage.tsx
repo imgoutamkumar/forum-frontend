@@ -6,7 +6,7 @@ import { useGetThreadPostsQuery } from "@/redux/services/postApi"
 import PostCard from "@/components/shop/thread/PostCardComponent"
 import { Button } from "@/components/ui/button"
 
-const ThreadPage = () => {
+const ThreadDetailPage = () => {
   const navigate = useNavigate()
   const params = useParams()
   const threadId = params?.threadId as string
@@ -75,4 +75,4 @@ const ThreadPage = () => {
   )
 }
 
-export default ThreadPage
+export default ThreadDetailPage

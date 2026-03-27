@@ -3,15 +3,14 @@ import { useState } from "react";
 import VideoBlock from "../VideoBlock";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
-import { Edit, Edit2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 import EditPostDialog from "@/components/admin/EditPostDialog";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, threadId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const [draftContent, setDraftContent] = useState(
-    post?.blocks?.map((b) => ({ ...b }))
+    post?.blocks?.map((b:any) => ({ ...b }))
   );
 
   const handleSave = async () => {
@@ -57,7 +56,7 @@ const PostCard = ({ post }) => {
                 return (
                   <p
                     key={i}
-                    className="text-[1.15rem] text-gray-800 whitespace-pre-line"
+                    className="text-[1rem] sm:text-[1.12rem] text-gray-800 whitespace-pre-line"
                   >
                     {block.content}
                   </p>
@@ -105,6 +104,7 @@ className="w-full max-w-[210px] sm:max-w-[300px] object-cover rounded-lg"       
       </Card>
 
       <EditPostDialog
+      threadId={threadId}
         post={post}
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
