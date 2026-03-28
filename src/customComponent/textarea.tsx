@@ -19,7 +19,7 @@ export const CustomTextarea = <T extends FieldValues>({ control, name, label, pl
       control={control}
       name={name}
       render={({ field, fieldState }) => (
-        <FormItem className="mb-4 gap-0">
+        <FormItem className="mb-2 sm:mb-4 gap-0">
           <FormLabel className="mb-2">{label}</FormLabel>
           <FormControl>
              <Textarea id={id} placeholder={placeholder} {...field} style={{ height: height || "100px" }} />

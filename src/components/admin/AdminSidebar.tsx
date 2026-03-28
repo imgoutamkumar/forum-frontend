@@ -14,6 +14,7 @@ import {
   LayoutTemplate,
   Users,
   LayoutList,
+  ArrowLeft,
 } from "lucide-react"
 // import { Logo } from "@/components/logo"
 // import { SidebarNotification } from "@/components/sidebar-notification"
@@ -28,11 +29,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Link } from "react-router-dom"
 import { NavMain } from "./NavMain"
 import { SidebarNotification } from "./SidebarNotification"
-import {Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
 
 const data = {
   user: {
@@ -60,8 +62,8 @@ const data = {
       label: "Apps",
       items: [
         {
-          title: "Products",
-          url: "/admin/products",
+          title: "Threads",
+          url: "/admin/all-threads",
           icon: LayoutList,
         },
         {
@@ -217,21 +219,32 @@ const AdminSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link to="/admin/dashboard">
+            <div className="relative flex items-center justify-between w-full">
+              {/* Link to dashboard */}
+              <Link
+                to="/admin/dashboard"
+                className="flex flex-1 gap-x-2 items-center"
+              >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   {/* <Logo size={24} className="text-current" /> */}
                   <Avatar>
-  <AvatarImage src="https://github.com/shadcn.png" />
-  <AvatarFallback>CN</AvatarFallback>
-</Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Fashion</span>
                   <span className="truncate text-xs">Admin Dashboard</span>
                 </div>
               </Link>
-            </SidebarMenuButton>
+
+              {/* Mobile sidebar close trigger */}
+              <div className="md:hidden">
+                <SidebarTrigger>
+                  <ArrowLeft className="w-5 h-5 cursor-pointer" />
+                </SidebarTrigger>
+              </div>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

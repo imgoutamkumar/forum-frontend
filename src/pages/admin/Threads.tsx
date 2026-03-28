@@ -41,7 +41,7 @@ const Threads = () => {
 
   return (
     <div className="flex w-full">
-      <div className="flex flex-col gap-y-2 p-4 w-full">
+      <div className="flex flex-col gap-y-2 sm:p-4 w-full">
         <div className="overflow-hidden rounded-lg border shadow-sm">
           <Table>
             <TableHeader className="bg-gray-50">

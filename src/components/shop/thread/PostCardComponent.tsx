@@ -64,7 +64,7 @@ const PostCard = ({ post, threadId }) => {
 
               case "IMAGE":
                 return (
-                  <div className="flex flex-wrap px-4">
+                  <div className="flex flex-wrap px-2 sm:px-4">
                     {block?.media?.map((img: any, imgIdx: number) => (
                       <img
                         key={imgIdx}

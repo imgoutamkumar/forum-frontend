@@ -12,7 +12,7 @@ const PostForm = () => {
     })
 
     return (
-        <div className="p-2">
+        <div className="">
             <h3 className="text-2xl font-bold mb-2">Post Content</h3>
 
             {fields.map((field, index) => (
@@ -35,7 +35,7 @@ const PostForm = () => {
 
             </button>
             <Button
-                className="rounded-full border-blue-500 text-blue-500 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                className="rounded-full border-blue-500 text-blue-500 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mb-2"
                 type="button"
                 variant="outline"
                 onClick={() =>

@@ -49,7 +49,7 @@ const PostBlockForm = ({ index, remove }) => {
   }, [type, index, setValue])
 
   return (
-    <div className="relative rounded-2xl border border-gray-300 p-4 mb-2">
+    <div className="relative rounded-2xl border border-gray-300 p-2 sm:p-4 mb-2">
       <h3 className="text-[1rem] font-bold mb-2">Block {index + 1}</h3>
       {/* Type Selector */}
       {/* <select {...register(`post.blocks.${index}.type`)}>
@@ -67,7 +67,7 @@ const PostBlockForm = ({ index, remove }) => {
         //     {...register(`post.blocks.${index}.content`)}
         //     placeholder="Enter text..."
         // />
-        <CustomTextarea control={control} name={`post.blocks.${index}.content`} label="Title" />
+        <CustomTextarea control={control} name={`post.blocks.${index}.content`} label="Title" height="150px" />
 
       )}
 

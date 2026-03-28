@@ -41,13 +41,18 @@ const threadSchema = z.object({
 })
 
 const CreateThreadForm = () => {
-    const {data:categories, isLoading:isCategoryDataLoading} = useGetCategoriesQuery()
+    const { data: categories, isLoading: isCategoryDataLoading } = useGetCategoriesQuery()
     const [createThread, { isLoading }] = useCreateThreadMutation()
 
-const categoryOptions = categories.data.map((category: any) => ({
-  label: category.name,
-  value: category.id
-}));
+    let categoryOptions: any;
+
+    if (categories) {
+        categoryOptions = categories?.data?.map((category: any) => ({
+            label: category.name,
+            value: category.id
+        }));
+    }
+
 
     const form = useForm({
         resolver: zodResolver(threadSchema),
