@@ -94,7 +94,7 @@ const EditPostDialog = ({ post, isOpen, onClose, threadId }: EditPostDialogProps
 
   return (
     <Dialog open={isOpen}>
-      <DialogContent className="p-0 w-[320px] sm:w-[800px] max-w-full h-[80vh]">
+      <DialogContent className="p-0 max-w-full sm:w-[800px]  h-[80vh] mx-2 sm:mx-0">
         <DialogHeader className="sticky top-0 z-20 bg-white border-b flex flex-row items-center justify-between rounded-[0.625rem] py-1 px-2">
           <DialogTitle className="px-4">Edit Post</DialogTitle>
 
@@ -108,7 +108,7 @@ const EditPostDialog = ({ post, isOpen, onClose, threadId }: EditPostDialogProps
         </DialogHeader>
 
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(handleSubmit)} className="flex-1 overflow-y-auto p-4 space-y-4 overflow-hidden h-full">
+          <form onSubmit={methods.handleSubmit(handleSubmit)} className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 overflow-hidden h-full">
             <PostForm />
             <DialogFooter className="flex justify-end gap-2">
               <Button className="cursor-pointer" variant="outline" onClick={onClose}>Cancel</Button>

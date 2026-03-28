@@ -23,7 +23,7 @@ const ThreadDetailPage = () => {
 
   if (!data && isLoading) {
     return (
-      <div className="max-w-5xl mx-auto space-y-4 p-4 animate-pulse">
+      <div className="max-w-5xl mx-auto space-y-4 p-2 sm:p-4 animate-pulse">
         <div className="h-4 bg-gray-300 rounded w-[200px]"></div>
         {[...Array(3)].map((_, i) => (
           <div key={i} className="border rounded-lg p-4 space-y-3">
