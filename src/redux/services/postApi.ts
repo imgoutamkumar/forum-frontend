@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { ApiResponse, PostPaginatedResponse, PostWithBlocks } from '../types/thread'
+import { baseQueryWithAuth } from './baseQuery';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const postApi = createApi({
     reducerPath: "postApi",
     tagTypes: ["Posts"],
-    baseQuery: fetchBaseQuery({
-        baseUrl: baseUrl,
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as { auth?: { token?: string } }).auth?.token
+    // baseQuery: fetchBaseQuery({
+    //     baseUrl: baseUrl,
+    //     prepareHeaders: (headers, { getState }) => {
+    //         const token = (getState() as { auth?: { token?: string } }).auth?.token
 
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`)
-            }
+    //         if (token) {
+    //             headers.set("authorization", `Bearer ${token}`)
+    //         }
 
-            return headers
-        },
-    }),
+    //         return headers
+    //     },
+    // }),
+    baseQuery:baseQueryWithAuth,
     endpoints: (builder) => ({
         createPost: builder.mutation<ApiResponse, FormData>({
             query: (formData) => {
@@ -37,9 +39,19 @@ export const postApi = createApi({
                 method: "GET",
                 params: { page, limit },
             }),
-            providesTags: (result, error, { threadId }) => [
-                { type: "Posts", id: `THREAD_${threadId}` },
-            ],
+            providesTags: (result, error, { threadId }) => {
+                if (!result) {
+                    return [{ type: "Posts", id: `THREAD_${threadId}` }]
+                }
+
+                return [
+                    { type: "Posts", id: `THREAD_${threadId}` },
+                    ...result.data.posts.map((post) => ({
+                        type: "Posts" as const,
+                        id: post.id,
+                    })),
+                ]
+            }
         }),
 
         updatePost: builder.mutation<ApiResponse, { threadId: string; formData: FormData }>({
@@ -50,7 +62,7 @@ export const postApi = createApi({
                     body: formData,
                 }
             },
-            invalidatesTags: (result, error, { threadId }) => [
+            invalidatesTags: (result, error, { threadId}) => [
                 { type: "Posts", id: `THREAD_${threadId}` },
             ],
         }),

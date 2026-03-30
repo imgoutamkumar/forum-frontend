@@ -1,14 +1,16 @@
 
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import ProductShopPagination from "@/components/shop/pagination"
 import { useGetThreadPostsQuery } from "@/redux/services/postApi"
 import PostCard from "@/components/shop/thread/PostCardComponent"
 import { Button } from "@/components/ui/button"
 
 const ThreadPage = () => {
+const location = useLocation();
   const navigate = useNavigate()
   const params = useParams()
+  const title = location.state?.title;
   const threadId = params?.threadId as string
 
   // const [searchTerm, setSearchTerm] = useState("")
@@ -39,7 +41,7 @@ const ThreadPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-4">
-      <h1 className="text-xl font-semibold">Thread Posts</h1>
+      <h1 className="text-xl font-semibold">{title || "Thread Posts"}</h1>
       <div className="flex justify-end">
         <Button
           className="cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
@@ -50,9 +52,9 @@ const ThreadPage = () => {
           {isFetching ? "Refreshing..." : "+ Add post"}
         </Button>
       </div>
-      {data?.data?.posts?.map((post) => (
+      {data?.data?.posts?.map((post,index) => (
         <>
-          <PostCard key={post?.id} post={post} threadId={threadId} />
+          <PostCard key={post?.id} post={post} threadId={threadId} postNumber={(index + 1)*page} />
         </>
       ))}
 

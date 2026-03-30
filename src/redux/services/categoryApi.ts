@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { baseQueryWithAuth } from './baseQuery';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type ApiResponse<T = unknown> = {
@@ -11,18 +12,19 @@ type ApiResponse<T = unknown> = {
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',
     tagTypes: ['Category'],
-    baseQuery: fetchBaseQuery({
-        baseUrl: baseUrl,
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth.token
+    // baseQuery: fetchBaseQuery({
+    //     baseUrl: baseUrl,
+    //     prepareHeaders: (headers, { getState }) => {
+    //         const token = (getState() as any).auth.token
 
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`)
-            }
+    //         if (token) {
+    //             headers.set('authorization', `Bearer ${token}`)
+    //         }
 
-            return headers
-        },
-    }),
+    //         return headers
+    //     },
+    // }),
+    baseQuery:baseQueryWithAuth,
     endpoints: (builder) => ({
         createCategory: builder.mutation<ApiResponse, { name: string}>({
             query: (credentials) => ({

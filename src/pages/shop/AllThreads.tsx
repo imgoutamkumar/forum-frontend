@@ -37,11 +37,25 @@ const AllThreads = () => {
   const threads = data?.data?.threads ?? [];
   const totalPages = data?.data?.pagination?.totalPages ?? 0;
 
-  const handleRowClick = (threadId: string) => navigate(`/threads/thread/${threadId}`);
+  const handleRowClick = (thread: any) => {
+    navigate(`/threads/thread/${thread.id}`, {
+      state: { title: thread.title },
+    });
+  };
 
   return (
     <div className="flex w-full">
       <div className="flex flex-col gap-y-2 sm:p-4 w-full">
+        <div className="mb-2 sm:mb-4 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3">
+          <span className="text-xl">⚠️</span>
+          <div className="text-sm text-amber-800">
+            <p className="font-medium">Community Guidelines Reminder</p>
+            <p>
+              Please do not post violent, abusive, or inappropriate content.
+              Violations may result in removal or account suspension.
+            </p>
+          </div>
+        </div>
         <div className="overflow-hidden rounded-lg border shadow-sm">
           <Table>
             <TableHeader className="bg-gray-50">
@@ -57,11 +71,11 @@ const AllThreads = () => {
               {isFetching && threads.length === 0
                 ? Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} columns={columns} />)
                 : threads.length > 0
-                ? threads.map((thread) => (
+                  ? threads.map((thread) => (
                     <TableRow
                       key={thread.id}
                       className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
-                      onClick={() => handleRowClick(thread.id)}
+                      onClick={() => handleRowClick(thread)}
                     >
                       <TableCell className="py-3 px-4 font-medium text-blue-600 hover:underline">
                         {thread.title}
@@ -77,13 +91,13 @@ const AllThreads = () => {
                       </TableCell>
                     </TableRow>
                   ))
-                : (
-                  <TableRow>
-                    <TableCell colSpan={columns.length} className="py-12 text-center text-gray-500">
-                      <span className="text-lg">No threads found 😕</span>
-                    </TableCell>
-                  </TableRow>
-                )}
+                  : (
+                    <TableRow>
+                      <TableCell colSpan={columns.length} className="py-12 text-center text-gray-500">
+                        <span className="text-lg">No threads found 😕</span>
+                      </TableCell>
+                    </TableRow>
+                  )}
             </TableBody>
           </Table>
         </div>

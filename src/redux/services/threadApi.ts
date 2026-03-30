@@ -1,24 +1,25 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { ApiResponse, CreateThreadPayload, Thread, ThreadPaginatedResponse } from "../types/thread"
+import { baseQueryWithAuth } from "./baseQuery";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const threadApi = createApi({
     reducerPath: "threadApi",
     tagTypes: ["Threads"],
-    baseQuery: fetchBaseQuery({
-        baseUrl: baseUrl,
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as { auth?: { token?: string } }).auth?.token
+    // baseQuery: fetchBaseQuery({
+    //     baseUrl: baseUrl,
+    //     prepareHeaders: (headers, { getState }) => {
+    //         const token = (getState() as { auth?: { token?: string } }).auth?.token
 
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`)
-            }
+    //         if (token) {
+    //             headers.set("authorization", `Bearer ${token}`)
+    //         }
 
-            return headers
-        },
-    }),
-
+    //         return headers
+    //     },
+    // }),
+    baseQuery: baseQueryWithAuth,
     endpoints: (builder) => ({
 
         /* ===== CREATE THREAD ===== */

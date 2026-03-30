@@ -54,7 +54,6 @@ const Login = () => {
       } else {
         console.log("response?.data?.role", response?.data?.role)
         dispatch(setRole(response?.data?.role?.toLowerCase()));
-
         if (response?.data?.role?.toLowerCase() === "admin") {
           navigate("/admin/threads/all");
         } else if (response?.data?.role?.toLowerCase() === "user") {

@@ -94,7 +94,7 @@ const EditPostDialog = ({ post, isOpen, onClose, threadId }: EditPostDialogProps
 
   return (
     <Dialog open={isOpen}>
-      <DialogContent className="p-0 max-w-full sm:w-[800px]  h-[80vh] mx-2 sm:mx-0">
+      <DialogContent className="p-0 max-w-[95%] sm:w-[800px]  h-[80vh] sm:mx-0">
         <DialogHeader className="sticky top-0 z-20 bg-white border-b flex flex-row items-center justify-between rounded-[0.625rem] py-1 px-2">
           <DialogTitle className="px-4">Edit Post</DialogTitle>
 
