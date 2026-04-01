@@ -35,7 +35,7 @@ export const threadApi = createApi({
             invalidatesTags: [{ type: "Threads", id: "LIST" }],
         }),
 
-        getThreads: builder.query<ThreadPaginatedResponse<Thread>, { page?: number; limit?: number }>({
+        getThreads: builder.query<ThreadPaginatedResponse<Thread>, { page?: number; limit?: number, search?: string }>({
             query: (params) => ({
                 url: "/threads",
                 method: "GET",

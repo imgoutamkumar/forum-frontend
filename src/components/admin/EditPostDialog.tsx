@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogOverlay } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useForm, FormProvider } from "react-hook-form"
 import PostForm from "./CreateThreadForm/PostForm"
@@ -94,6 +94,7 @@ const EditPostDialog = ({ post, isOpen, onClose, threadId }: EditPostDialogProps
 
   return (
     <Dialog open={isOpen}>
+      <DialogOverlay className="bg-black/30 backdrop-blur-sm" />
       <DialogContent className="p-0 max-w-[95%] sm:w-[800px]  h-[80vh] sm:mx-0">
         <DialogHeader className="sticky top-0 z-20 bg-white border-b flex flex-row items-center justify-between rounded-[0.625rem] py-1 px-2">
           <DialogTitle className="px-4">Edit Post</DialogTitle>

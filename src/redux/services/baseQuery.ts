@@ -26,10 +26,11 @@ export const baseQueryWithAuth = async (args : any, api: any, extraOptions: any)
 //   }
 
   const result = await rawBaseQuery(args, api, extraOptions);
-
+console.log("result",result)
   // Handle backend rejection
-  if (result.error?.status === 401) {
+  if (result?.error?.originalStatus === 401) {
     // logout();
+    console.log('Unauthorized, logging out', result.error);
        api.dispatch(logout());
   }
 

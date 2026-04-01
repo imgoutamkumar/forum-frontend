@@ -3,18 +3,28 @@ import { useState } from "react";
 import VideoBlock from "../VideoBlock";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
-import { Edit2, Heart, MessageSquareText } from "lucide-react";
+import { Edit2, Heart, MessageSquareText, Reply } from "lucide-react";
 import EditPostDialog from "@/components/admin/EditPostDialog";
-import { useLazyGetCommentsQuery } from "@/redux/services/commentApi";
+import { useCreateCommentMutation, useLazyGetCommentsQuery } from "@/redux/services/commentApi";
+import { Button } from "@/components/ui/button";
+import { useCreateReplyMutation } from "@/redux/services/replyApi";
 
 const PostCard = ({ post, threadId, postNumber }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [openCommentsPostId, setOpenCommentsPostId] = useState<string | null>(null);
+  const [openRepliesCommentId, setOpenRepliesCommentId] = useState<string | null>(null);
+  const [replyTexts, setReplyTexts] = useState<{ [key: string]: string }>({});
+  const [commentText, setCommentText] = useState("");
+
+  const [createComment, { isLoading: isCreatingComment }] = useCreateCommentMutation();
+  const [createReply, { isLoading: isCreatingReply }] = useCreateReplyMutation();
+
 
   const [draftContent, setDraftContent] = useState(
     post?.blocks?.map((b: any) => ({ ...b }))
   );
 
-  const [fetchComments, { data, isLoading, isError }] =
+  const [fetchComments, { data: commentsData, isLoading, isError }] =
     useLazyGetCommentsQuery();
 
   const handleSave = async () => {
@@ -22,17 +32,57 @@ const PostCard = ({ post, threadId, postNumber }) => {
     setIsEditing(false);
   };
 
-  const showComments = async (postId) => {
+  const showComments = (postId: string) => {
+    setOpenCommentsPostId(prev => (prev === postId ? null : postId));
+
+    // optional: fetch comments when opening
+    if (openCommentsPostId !== postId) {
+      fetchComments(postId);
+    }
+  };
+
+  const handleCreateComment = async () => {
+    if (!commentText.trim()) return;
+
     try {
-      const data = await fetchComments(postId).unwrap();
-      console.log(data);
+      await createComment({
+        postId: post.id,
+        content: commentText,
+      }).unwrap();
+
+      setCommentText("");
+
+      // refetch comments after posting
+      fetchComments(post.id);
     } catch (err) {
       console.error(err);
     }
-  }
+  };
+
+
+  const handleCreateReply = async (commentId: string) => {
+    console.log("handleCreateReply")
+    const content = replyTexts[commentId]?.trim();
+    if (!content) return;
+
+    try {
+      await createReply({
+        commentId,
+        content,
+      }).unwrap();
+
+      // Clear input
+      setReplyTexts(prev => ({ ...prev, [commentId]: "" }));
+
+      // Refetch comments so the new reply appears
+      fetchComments(post.id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <div className="flex gap-x-2">
+    <div className="flex flex-col gap-x-2">
 
       <Card className="rounded-xl border shadow-sm gap-y-1">
         <CardContent className="pl-2 sm:pl-4 pr-2 sm:pr-4 pb-4 space-y-3">
@@ -122,7 +172,7 @@ const PostCard = ({ post, threadId, postNumber }) => {
 
               {/* Like */}
               <button className="flex items-center gap-1 hover:text-red-500 transition cursor-pointer">
-                <Heart /> <span className="text-sm">{post?.likes || 0}</span>
+                <Heart /> <span className="text-sm">{post?._count?.likes || 0}</span>
               </button>
 
               {/* Comment */}
@@ -140,6 +190,108 @@ const PostCard = ({ post, threadId, postNumber }) => {
         </CardFooter>
       </Card>
 
+      {openCommentsPostId === post.id && (
+        <div className="mt-3 border-t pt-3">
+
+          {/* Input box */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Write a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              className="flex-1 min-w-0 border rounded px-3 py-1 text-sm"
+            />
+
+            <Button
+              className="cursor-pointer bg-blue-500 text-white px-2 rounded text-sm"
+              onClick={handleCreateComment}
+            >
+              {isCreatingComment ? "Sending..." : "Send"}
+            </Button>
+          </div>
+
+          {/* Comments list */}
+          <div className="mt-2 space-y-3">
+            {isLoading && <div className="max-w-5xl mx-auto space-y-4 p-4 animate-pulse">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="border rounded-lg p-4 space-y-3">
+                  <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+                  <div className="h-3 bg-gray-300 rounded w-full"></div>
+                  <div className="h-3 bg-gray-300 rounded w-5/6"></div>
+                </div>
+              ))}
+            </div>
+            }
+
+            {commentsData?.data?.map((comment: any) => (
+              <div key={comment?.id} className="text-sm border-b pb-2">
+
+                {/* Comment */}
+                <span className="flex items-center gap-2 font-medium text-gray-700">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <span className="text-[13px]">{post?.user?.name || "Anonymous"}</span>
+                </span>
+                <p className="font-medium max-w-[90%] m-auto text-[13px]">{comment?.content}</p>
+
+                {/* Replies */}
+                <div className="ml-4 mt-2 space-y-2">
+                  {comment?.replies?.map((reply: any) => (
+                    <div key={reply?.id} className="max-w-[80%] text-[13px] text-gray-700">
+
+                      {/* Header */}
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <Avatar className="size-6">
+                          <AvatarImage src="https://github.com/shadcn.png" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium">
+                          {reply?.user?.name || "Anonymous"}
+                        </span>
+                      </div>
+
+                      {/* Reply content aligned under name */}
+                      <div className="ml-8">
+                        <span>↳ {reply.content}</span>
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end"><span className="flex gap-x-2 cursor-pointer text-sm hover:text-blue-500" onClick={() => setOpenRepliesCommentId(prev => (prev === comment.id ? null : comment.id))}>{openRepliesCommentId != comment.id && <span className="flex gap-x-2"> <Reply /> Reply</span>}</span> </div>
+                {/* Reply input */}
+                {openRepliesCommentId === comment.id && (<div className="ml-4 mt-2 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Write a reply..."
+                    value={replyTexts[comment.id] || ""}
+                    onChange={(e) =>
+                      setReplyTexts(prev => ({ ...prev, [comment.id]: e.target.value }))
+                    }
+                    className="flex-1 min-w-0 border rounded px-3 py-1 text-xs"
+                  />
+                  {openRepliesCommentId === comment.id && <Button
+                    variant="outline"
+                    className="px-2 rounded text-xs cursor-pointer"
+                    onClick={() => setOpenRepliesCommentId(null)}
+                  >
+                    Cancel
+                  </Button>}
+                  <Button
+                    className="bg-blue-500 text-white px-2 rounded text-xs cursor-pointer"
+                    onClick={() => handleCreateReply(comment.id)}
+                  >
+                    Reply
+                  </Button>
+                </div>)}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <EditPostDialog
         threadId={threadId}

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDistanceToNow } from "date-fns";
 import { useGetThreadsQuery } from "@/redux/services/threadApi";
@@ -29,11 +29,13 @@ const SkeletonRow = ({ columns }: any) => (
 );
 
 const Threads = () => {
+  const context = useOutletContext() || {};
+const { search = "" } = context;
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
-
-  const { data, isLoading, isFetching } = useGetThreadsQuery({ page, limit });
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const { data, isLoading, isFetching } = useGetThreadsQuery({ page, limit, search: debouncedSearch });
   const threads = data?.data?.threads ?? [];
   const totalPages = data?.data?.pagination?.totalPages ?? 0;
 
@@ -42,6 +44,18 @@ const Threads = () => {
       state: { title: thread.title },
     });
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   return (
     <div className="flex w-full">
