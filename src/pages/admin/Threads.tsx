@@ -28,8 +28,12 @@ const SkeletonRow = ({ columns }: any) => (
   </TableRow>
 );
 
+type OutletContextType = {
+  search?: string;
+};
+
 const Threads = () => {
-  const context = useOutletContext() || {};
+  const context = useOutletContext<OutletContextType>() || {};
 const { search = "" } = context;
   const navigate = useNavigate();
   const [page, setPage] = useState(1);

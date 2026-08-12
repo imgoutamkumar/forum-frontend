@@ -6,7 +6,8 @@ import { Plus } from "lucide-react"
 const PostForm = () => {
     const { control } = useFormContext()
 
-    const { fields, append, remove } = useFieldArray({
+    // 👉 Extract 'move' from useFieldArray
+    const { fields, append, remove, move } = useFieldArray({
         control,
         name: "post.blocks"
     })
@@ -20,22 +21,13 @@ const PostForm = () => {
                     key={field.id}
                     index={index}
                     remove={remove}
+                    move={move} // 👉 Pass move function down
+                    totalBlocks={fields.length} // 👉 Pass total length to disable buttons at edges
                 />
             ))}
 
-            <button
-                type="button"
-                onClick={() =>
-                    append({
-                        type: "TEXT",
-                        content: ""
-                    })
-                }
-            >
-
-            </button>
             <Button
-                className="rounded-full border-blue-500 text-blue-500 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mb-2"
+                className="rounded-full border-blue-500 text-blue-500 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mb-2 mt-4"
                 type="button"
                 variant="outline"
                 onClick={() =>
